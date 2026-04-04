@@ -1,0 +1,19 @@
+name: Build Spotify Premium IPA
+on: [push]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Restore
+        run: dotnet restore
+      - name: Build IPA
+        run: dotnet publish -f net8.0-ios -c Release -p:BuildIpa=true --no-restore
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpotifyPremium
+          path: '**/*.ipa'
