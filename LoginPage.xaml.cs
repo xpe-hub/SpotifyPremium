@@ -2,10 +2,7 @@ namespace SpotifyPremium;
 
 public partial class LoginPage : ContentPage
 {
-    public LoginPage()
-    {
-        InitializeComponent();
-    }
+    public LoginPage() => InitializeComponent();
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
@@ -18,27 +15,24 @@ public partial class LoginPage : ContentPage
             return;
         }
 
-        // === KEYAUTH LOGIN ===
         try
         {
-            // Asegúrate de que KeyAuth.cs tenga tus datos (lo hacemos en el paso 2)
-            var keyAuth = new KeyAuthApp();   // ← este es el nombre de clase que trae keyauth.cc
-
+            var keyAuth = new KeyAuthApp();
             bool loginExitoso = await Task.Run(() => keyAuth.login(user, pass));
 
             if (loginExitoso)
             {
-                FileVaultService.Init();                    // inicializa el vault de archivos ocultos
-                await Navigation.PushAsync(new MainPage()); // va a la pantalla principal de Spotify
+                FileVaultService.Init();
+                await Navigation.PushAsync(new MainPage());
             }
             else
             {
-                await DisplayAlert("Error", "Usuario o contraseña incorrectos (KeyAuth)", "OK");
+                await DisplayAlert("Error", "Usuario o contraseña incorrectos", "OK");
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"Error de KeyAuth: {ex.Message}", "OK");
+            await DisplayAlert("Error", $"KeyAuth error: {ex.Message}", "OK");
         }
     }
 }
