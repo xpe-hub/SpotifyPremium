@@ -14,6 +14,12 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      # ← ESTO ES LO QUE ARREGLA EL ERROR
+      - name: Setup Xcode 16.2 (requerido por .NET iOS 26.2)
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.2'
+
       - name: Restore workloads
         run: dotnet workload restore
 
