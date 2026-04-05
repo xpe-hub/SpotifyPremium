@@ -1,51 +1,35 @@
-name: Build IPA
+name: Build Spotify Premium IPA
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+on: [push]
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-26
 
     steps:
-      # Checkout del código
-      - name: Checkout
-        uses: actions/checkout@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      - uses: actions/checkout@v4
 
-      # Configurar .NET
-      - name: Setup .NET
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           dotnet-version: '9.0.x'
 
-      # Restaurar workloads de iOS
-      - name: Restore Workloads
-        run: dotnet workload restore
-
-      # Restaurar dependencias
-      - name: Restore Dependencies
-        run: dotnet restore
-
-      # Configurar Xcode (usa versión disponible en runners)
-      - name: Setup Xcode
+      - name: Setup Xcode 26.2
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '26.2.0'
+          xcode-version: '26.2'
 
-      # Compilar IPA
+      - name: Restore workloads
+        run: dotnet workload restore
+
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Build IPA
-        run: dotnet build SpotifyPremium.sln -c Release
+        run: dotnet publish -f net9.0-ios -c Release -p:BuildIpa=true
 
-      # Publicar artefacto IPA
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SpotifyPremium-IPA
+          name: SpotifyPremium
           path: '**/*.ipa'
