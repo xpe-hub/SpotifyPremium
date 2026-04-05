@@ -1,44 +1,15 @@
-namespace SpotifyPremium;
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SpotifyPremium.LoginPage"
+             BackgroundColor="#121212">
 
-public partial class LoginPage : ContentPage
-{
-    public LoginPage()
-    {
-        InitializeComponent();
-    }
-
-    private async void OnLoginClicked(object sender, EventArgs e)
-    {
-        string user = UsernameEntry.Text?.Trim();
-        string pass = PasswordEntry.Text?.Trim();
-
-        if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
-        {
-            await DisplayAlert("Error", "Usuario y contraseña son obligatorios", "OK");
-            return;
-        }
-
-        // === KEYAUTH LOGIN ===
-        try
-        {
-            // Asegúrate de que KeyAuth.cs tenga tus datos (lo hacemos en el paso 2)
-            var keyAuth = new KeyAuthApp();   // ← este es el nombre de clase que trae keyauth.cc
-
-            bool loginExitoso = await Task.Run(() => keyAuth.login(user, pass));
-
-            if (loginExitoso)
-            {
-                FileVaultService.Init();                    // inicializa el vault de archivos ocultos
-                await Navigation.PushAsync(new MainPage()); // va a la pantalla principal de Spotify
-            }
-            else
-            {
-                await DisplayAlert("Error", "Usuario o contraseña incorrectos (KeyAuth)", "OK");
-            }
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Error", $"Error de KeyAuth: {ex.Message}", "OK");
-        }
-    }
-}
+    <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
+        <Image Source="spotify_logo.png" HeightRequest="90" HorizontalOptions="Center" />
+        <Label Text="Spotify Premium" FontSize="36" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+        <Entry x:Name="UsernameEntry" Placeholder="Usuario KeyAuth" PlaceholderColor="#B3B3B3" TextColor="White" FontSize="18" />
+        <Entry x:Name="PasswordEntry" Placeholder="Contraseña" IsPassword="True" PlaceholderColor="#B3B3B3" TextColor="White" FontSize="18" />
+        <Button Text="INICIAR SESIÓN" BackgroundColor="#1DB954" TextColor="White" FontAttributes="Bold" FontSize="18" HeightRequest="56" Clicked="OnLoginClicked" />
+        <Label Text="Desarrollado por xpe.nettt" TextColor="#666666" FontSize="12" HorizontalOptions="Center" Margin="0,30,0,0" />
+    </VerticalStackLayout>
+</ContentPage>
