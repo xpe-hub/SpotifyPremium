@@ -33,11 +33,11 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore
 
-      # Configurar Xcode (usa la versión estable disponible en runners)
+      # Configurar Xcode (usa versión disponible en runners)
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.4' # ajusta según disponibilidad
+          xcode-version: '26.2.0'
 
       # Compilar IPA
       - name: Build IPA
