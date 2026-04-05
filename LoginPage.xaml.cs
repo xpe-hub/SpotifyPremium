@@ -2,26 +2,43 @@ namespace SpotifyPremium;
 
 public partial class LoginPage : ContentPage
 {
-    public LoginPage() => InitializeComponent();
-
-    private async void OnLogin(object sender, EventArgs e)
+    public LoginPage()
     {
-        if (string.IsNullOrEmpty(UserEntry.Text) || string.IsNullOrEmpty(PassEntry.Text))
+        InitializeComponent();
+    }
+
+    private async void OnLoginClicked(object sender, EventArgs e)
+    {
+        string user = UsernameEntry.Text?.Trim();
+        string pass = PasswordEntry.Text?.Trim();
+
+        if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
         {
-            await DisplayAlert("Error", "Usuario y contraseña requeridos", "OK");
+            await DisplayAlert("Error", "Usuario y contraseña son obligatorios", "OK");
             return;
         }
 
-        // KeyAuth login (ajusta según tu clase KeyAuth.cs)
-        var keyAuth = new KeyAuthApp(); // nombre exacto de tu clase descargada
-        if (await Task.Run(() => keyAuth.login(UserEntry.Text, PassEntry.Text)))
+        // === KEYAUTH LOGIN ===
+        try
         {
-            FileVaultService.Init();
-            await Navigation.PushAsync(new MainPage());
+            // Asegúrate de que KeyAuth.cs tenga tus datos (lo hacemos en el paso 2)
+            var keyAuth = new KeyAuthApp();   // ← este es el nombre de clase que trae keyauth.cc
+
+            bool loginExitoso = await Task.Run(() => keyAuth.login(user, pass));
+
+            if (loginExitoso)
+            {
+                FileVaultService.Init();                    // inicializa el vault de archivos ocultos
+                await Navigation.PushAsync(new MainPage()); // va a la pantalla principal de Spotify
+            }
+            else
+            {
+                await DisplayAlert("Error", "Usuario o contraseña incorrectos (KeyAuth)", "OK");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            await DisplayAlert("Error", "Credenciales inválidas", "OK");
+            await DisplayAlert("Error", $"Error de KeyAuth: {ex.Message}", "OK");
         }
     }
 }
