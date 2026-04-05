@@ -8,14 +8,20 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
+    <!-- Camuflaje Spotify -->
     <DisplayName>Spotify Premium</DisplayName>
     <ApplicationTitle>Spotify Premium</ApplicationTitle>
     <BundleIdentifier>com.spotify.premium2026</BundleIdentifier>
+
+    <!-- Para iOS + DNS sin rastros -->
     <MauiEntitlements>Platforms/iOS/Entitlements.plist</MauiEntitlements>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
   </PropertyGroup>
 
+  <!-- Paquete obligatorio para .NET 9 MAUI -->
   <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
     <MauiImage Include="Resources\Images\*" />
   </ItemGroup>
 
