@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-26          # ← Este es el runner que tiene Xcode 26.2
 
     steps:
       - uses: actions/checkout@v4
@@ -14,11 +14,10 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      # ← ESTO ES LO QUE ARREGLA EL ERROR
-      - name: Setup Xcode 16.2 (requerido por .NET iOS 26.2)
+      - name: Setup Xcode 26.2 (obligatorio para .NET iOS 26.2)
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.2'
+          xcode-version: '26.2'
 
       - name: Restore workloads
         run: dotnet workload restore
