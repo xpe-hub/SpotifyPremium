@@ -1,15 +1,44 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SpotifyPremium.LoginPage"
-             BackgroundColor="#121212">
+namespace SpotifyPremium;
 
-    <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
-        <Image Source="spotify_logo.png" HeightRequest="90" HorizontalOptions="Center" />
-        <Label Text="Spotify Premium" FontSize="36" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
-        <Entry x:Name="UserEntry" Placeholder="Usuario KeyAuth" PlaceholderColor="#B3B3B3" TextColor="White" />
-        <Entry x:Name="PassEntry" Placeholder="Contraseña" IsPassword="True" PlaceholderColor="#B3B3B3" TextColor="White" />
-        <Button Text="INICIAR SESIÓN" BackgroundColor="#1DB954" TextColor="White" FontAttributes="Bold" Clicked="OnLogin" />
-        <Label Text="Desarrollado por xpe.nettt" TextColor="#666" FontSize="12" HorizontalOptions="Center" />
-    </VerticalStackLayout>
-</ContentPage>
+public partial class LoginPage : ContentPage
+{
+    public LoginPage()
+    {
+        InitializeComponent();
+    }
+
+    private async void OnLoginClicked(object sender, EventArgs e)
+    {
+        string user = UsernameEntry.Text?.Trim();
+        string pass = PasswordEntry.Text?.Trim();
+
+        if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
+        {
+            await DisplayAlert("Error", "Usuario y contraseña son obligatorios", "OK");
+            return;
+        }
+
+        // === KEYAUTH LOGIN ===
+        try
+        {
+            // Asegúrate de que KeyAuth.cs tenga tus datos (lo hacemos en el paso 2)
+            var keyAuth = new KeyAuthApp();   // ← este es el nombre de clase que trae keyauth.cc
+
+            bool loginExitoso = await Task.Run(() => keyAuth.login(user, pass));
+
+            if (loginExitoso)
+            {
+                FileVaultService.Init();                    // inicializa el vault de archivos ocultos
+                await Navigation.PushAsync(new MainPage()); // va a la pantalla principal de Spotify
+            }
+            else
+            {
+                await DisplayAlert("Error", "Usuario o contraseña incorrectos (KeyAuth)", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Error de KeyAuth: {ex.Message}", "OK");
+        }
+    }
+}
