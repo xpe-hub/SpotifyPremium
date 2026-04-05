@@ -9,19 +9,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup .NET 8
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
 
-      - name: Restore workloads (arregla el error NETSDK1147)
+      - name: Restore workloads
         run: dotnet workload restore
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build IPA
-        run: dotnet publish -f net8.0-ios -c Release -p:BuildIpa=true --no-restore
+        run: dotnet publish -f net9.0-ios -c Release -p:BuildIpa=true --no-restore
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
