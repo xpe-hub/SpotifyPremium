@@ -25,8 +25,8 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build IPA
-        run: dotnet publish -f net9.0-ios -c Release -p:BuildIpa=true
+      - name: Build IPA SIN FIRMA (para eSign)
+        run: dotnet publish -f net9.0-ios -c Release -p:BuildIpa=true -p:CodesignKeychain="" -p:CodesignProvision="" -p:CodesignSign="" -p:DisableAutomaticSigning=true
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
