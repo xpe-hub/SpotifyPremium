@@ -15,12 +15,13 @@
     <ApplicationId>com.spotify.premium2026</ApplicationId>
     <BundleIdentifier>com.spotify.premium2026</BundleIdentifier>
 
-    <!-- iOS + DNS sin rastros -->
+    <!-- iOS + DNS -->
     <MauiEntitlements>Platforms/iOS/Entitlements.plist</MauiEntitlements>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-
-    <!-- ESTO ARREGLA EL ERROR ACTUAL -->
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+
+    <!-- ESTO ES LO QUE ARREGLA EL ERROR DE KEYCHAIN -->
+    <CodesignRequired>false</CodesignRequired>
   </PropertyGroup>
 
   <ItemGroup>
